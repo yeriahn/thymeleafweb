@@ -26,8 +26,10 @@ public class BoardController {
     private BoardValidator boardValidator;
 
     @GetMapping("/list")
-    public String list(Model model,@PageableDefault(size = 2) Pageable pageable){
-        Page<Board> boardList = boardRepository.findAll(pageable);
+    public String list(Model model,@PageableDefault(size = 2) Pageable pageable,
+                       @RequestParam(required = false, defaultValue = "") String searchText){
+        //Page<Board> boardList = boardRepository.findAll(pageable);
+        Page<Board> boardList = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText, pageable);
 
         //boardList.getPageable().getPageNumber() : 현재 페이지
         int startPage = Math.max(1, boardList.getPageable().getPageNumber() - 4); //마이너스가 나올 수 있으니 최소값을 0으로 설정
